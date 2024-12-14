@@ -8,6 +8,10 @@ opkg update && opkg install tar
 echo "Installing curl..."
 opkg update && opkg install curl
 
+# Установка curl (если не установлен)
+echo "Installing unzip..."
+opkg update && opkg install unzip
+
 # Загрузка и выполнение нового скрипта
 echo "Downloading and executing the new script..."
 wget -O /root/net.sh https://raw.githubusercontent.com/Vancltkin/testneko/main/net.sh && chmod 0755 /root/net.sh && /root/net.sh
