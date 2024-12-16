@@ -71,6 +71,30 @@ esac
 
 set_language
 
+# Основной скрипт
+print_header "Обновление списка пакетов"
+if opkg update; then
+    print_success "Список пакетов успешно обновлён"
+else
+    print_error "Ошибка при обновлении списка пакетов"
+    exit 1
+fi
+
+print_header "Установка необходимых зависимостей"
+if opkg install curl; then
+    print_success "curl успешно установлен"
+else
+    print_error "Ошибка при установке curl"
+    exit 1
+fi
+
+if opkg install luci-compat luci-lib-jsonc; then
+    print_success "Зависимости luci-compat и luci-lib-jsonc успешно установлены"
+else
+    print_error "Ошибка при установке зависимостей"
+    exit 1
+fi
+
 # Получение последней версии пакета с GitHub
 get_latest_version() {
     print_info "Fetching latest version from GitHub..."
@@ -105,7 +129,6 @@ download_package() {
     fi
 }
 
-# Основной скрипт
 get_latest_version
 download_package
 
