@@ -2,3 +2,7 @@
 #SETUP
 
 wget -O /root/setup.sh https://raw.githubusercontent.com/Vancltkin/testneko/main/setup.sh && chmod 0755 /root/setup.sh && sh /root/setup.sh
+
+#SETUPFILE
+
+wget -O /root/setupfile.sh https://raw.githubusercontent.com/Vancltkin/testneko/main/setupfile.sh && chmod 0755 /root/setupfile.sh && sh /root/setupfile.sh
