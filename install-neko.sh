@@ -61,7 +61,7 @@ set_language() {
 # Выбор языка
 print_header "Language Selection / Выбор языка / 选择语言"
 echo -e "1) Русский\n2) English\n3) 中文"
-read -p "Your choice / Ваш выбор / 选择: " lang_choice
+read -p "Ваш выбор / Your choice / 选择: " lang_choice
 case $lang_choice in
     1) LANGUAGE="RU" ;;
     2) LANGUAGE="EN" ;;
@@ -76,7 +76,7 @@ get_latest_version() {
     print_info "Fetching latest version from GitHub..."
     API_URL="https://github.com/Thaolga/openwrt-nekobox/releases/latest"
     RELEASE_INFO=$(curl -s -L $API_URL)
-    VERSION=$(echo "$RELEASE_INFO" | grep -oP '(?<=releases/tag/)[0-9.]+')
+    VERSION=$(echo "$RELEASE_INFO" | grep -o 'releases/tag/[0-9.]\+' | sed 's/releases\/tag\///')
     if [ -z "$VERSION" ]; then
         print_error "Unable to fetch the latest version. Please check the connection."
         exit 1
@@ -86,9 +86,18 @@ get_latest_version() {
 
 # Скачивание пакета
 download_package() {
-    PACKAGE_URL="https://github.com/Thaolga/openwrt-nekobox/releases/download/$VERSION/luci-app-nekobox_${VERSION}-${LANGUAGE,,}_all.ipk"
+    # Установка языка для скачивания соответствующего пакета
+    if [ "$LANGUAGE" = "RU" ]; then
+        LANGUAGE_SUFFIX="ru"
+    elif [ "$LANGUAGE" = "CN" ]; then
+        LANGUAGE_SUFFIX="cn"
+    else
+        LANGUAGE_SUFFIX="en"
+    fi
+
+    PACKAGE_URL="https://github.com/Thaolga/openwrt-nekobox/releases/download/$VERSION/luci-app-nekobox_${VERSION}-${LANGUAGE_SUFFIX}_all.ipk"
     print_info "Downloading package from $PACKAGE_URL..."
-    if wget -O /tmp/luci-app-nekobox_${VERSION}-${LANGUAGE,,}_all.ipk "$PACKAGE_URL"; then
+    if wget -O /tmp/luci-app-nekobox_${VERSION}-${LANGUAGE_SUFFIX}_all.ipk "$PACKAGE_URL"; then
         print_success "Package downloaded successfully"
     else
         print_error "Failed to download the package"
@@ -101,9 +110,9 @@ get_latest_version
 download_package
 
 print_header "Installing package..."
-if opkg install --force-depends /tmp/luci-app-nekobox_${VERSION}-${LANGUAGE,,}_all.ipk; then
+if opkg install --force-depends /tmp/luci-app-nekobox_${VERSION}-${LANGUAGE_SUFFIX}_all.ipk; then
     print_success "Package installed successfully"
-    rm -f /tmp/luci-app-nekobox_${VERSION}-${LANGUAGE,,}_all.ipk
+    rm -f /tmp/luci-app-nekobox_${VERSION}-${LANGUAGE_SUFFIX}_all.ipk
 else
     print_error "Failed to install the package"
     exit 1
