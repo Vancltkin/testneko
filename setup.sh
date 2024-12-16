@@ -26,6 +26,7 @@ opkg update && opkg install unzip
 echo -e "\n${GREEN}Выберите версию для установки:${NC}"
 echo -e "${BLUE}1. Версия 1${NC}"
 echo -e "${BLUE}2. Версия 2${NC}"
+echo -e "${BLUE}3. Версия 3${NC}"
 
 read -p "Введите номер выбранной версии: " version_choice
 
@@ -35,6 +36,9 @@ case $version_choice in
         ;;
     2)
         wget -O /root/version-2.sh https://raw.githubusercontent.com/Vancltkin/testneko/main/version-2.sh && chmod 0755 /root/version-2.sh && /root/version-2.sh
+        ;;
+    3)
+        wget -O /root/version-3.sh https://raw.githubusercontent.com/Vancltkin/testneko/main/version-3.sh && chmod 0755 /root/version-3.sh && /root/version-3.sh
         ;;
     *)
         echo -e "${RED}Неверный выбор.${NC}"
